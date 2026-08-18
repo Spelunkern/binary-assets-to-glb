@@ -24,7 +24,6 @@ permitted, and inspection of assets you are authorized to use.
 | .eft, .ef2, .ef3 | JSON | Particle-effect libraries. |
 | .3de | JSON | Particle-effect meshes. |
 | .dds | .png | Runtime textures, lightmaps, and effect textures. |
-| Client CSV files | flat .txt or JSON | Character, weapon, mount, NPC, and monster catalogs. |
 
 ## Setup
 
@@ -41,7 +40,7 @@ arguments to see its command-line usage:
     .venv/bin/python tools/convert_3do.py
     .venv/bin/python tools/convert_character.py
 
-Many batch tools read source roots from these optional variables:
+The generic texture and terrain-field helpers can read these optional roots:
 
     export ASSET_SOURCE_ROOT=/path/to/client/data
     export ASSET_DIST_ROOT=/path/to/client/dist/windows/data
@@ -68,11 +67,9 @@ There are two intentional output patterns:
 1. **Static models** such as .3do, .smod, and dungeon meshes can reference
    external PNG textures directly from their GLB material. Do not move only
    the GLB: copy its texture folder too.
-2. **Playable-character equipment** stores geometry and skinning in GLB files
-   without an embedded material. Some source clients reuse one mesh with many texture
-   variants, so the batch converters write loose PNG files plus slot tables
-   that map each record to its texture. Select the desired PNG and material in
-   Blender, Godot, or your own runtime.
+2. **Skinned meshes** can be exported with geometry, skeleton, and animation
+   separately. This reflects the source formats and lets an application choose
+   its own material and animation workflow.
 
 All DDS-to-PNG paths preserve source RGBA by default. Transparent RGB is
 corrected only for materials explicitly known to use alpha cutout, preventing
@@ -80,22 +77,18 @@ mipmap halos without corrupting glow masks or packed alpha data.
 
 ## Tool guide
 
-The primary single-asset converters are:
+The public toolkit intentionally contains only format-focused converters:
 
 - convert_character.py, convert_3do.py, convert_ani.py
 - convert_smod.py, convert_vani.py, convert_mani.py
 - convert_dg.py, convert_wld.py, convert_svmap.py
-- convert_eft.py, convert_3de.py, and copy_texture.py
-
-Batch and orchestration tools cover complete character catalogs, weapons,
-mantles, mounts, map decoration, creature/NPC models, terrain fields, sounds,
-and gameplay or map effect libraries. Their names describe their scope:
-batch_convert_*.py, convert_map.py, convert_gameplay_effects.py,
-convert_map_effect_catalogs.py, and prepare_wld_effects.py.
+- convert_eft.py, convert_3de.py, convert_field_lightmap.py, and
+  copy_texture.py
 
 Shared readers and writers such as source_reader.py, gltf_writer.py,
-texture_utils.py, and source_skeleton.py are implementation modules; other
-scripts import them automatically.
+texture_utils.py, and source_skeleton.py are implementation modules. The
+repository intentionally excludes project pipelines, catalogs, gameplay logic,
+audio utilities, benchmark scripts, and runtime-specific profiles.
 
 See docs/TOOLS.md for a complete tool-by-tool reference.
 
