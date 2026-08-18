@@ -1,0 +1,12 @@
+# Local Python environment and cache
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Source clients and converted output are intentionally not published.
+data/
+output/
+exports/
+build/
+dist/

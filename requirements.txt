@@ -1,0 +1,7 @@
+# Dependencies for the Python conversion tools. The converters do not require
+# Godot; Godot is only one option for opening exported GLB files.
+numpy>=2.0,<3
+scipy>=1.12,<2
+Pillow>=10,<13
+pygltflib>=1.16,<2
+soundfile>=0.12,<1
